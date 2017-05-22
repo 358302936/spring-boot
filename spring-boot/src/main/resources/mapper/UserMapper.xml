@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hx.spring_boot.model.dao.UserDao">
+
+  <resultMap type="com.hx.spring_boot.model.pojo.User" id="baseResultMap">
+  	<result column="id" property="id" jdbcType="INTEGER"/>
+  	<result column="username" property="username" jdbcType="VARCHAR"/>
+  	<result column="auth_key" property="auth_key" jdbcType="VARCHAR"/>
+  	<result column="password_hash" property="password_hash" jdbcType="VARCHAR"/>
+  	<result column="password_reset_token" property="password_reset_token" jdbcType="VARCHAR"/>
+  	<result column="email" property="email" jdbcType="VARCHAR"/>
+  	<result column="status" property="status" jdbcType="INTEGER"/>
+  	<result column="created_at" property="created_at" jdbcType="INTEGER"/>
+  	<result column="updated_at" property="updated_at" jdbcType="INTEGER"/>
+  </resultMap>
+  
+  <sql id="baseColumn">
+    id,username,auth_key,password_hash,password_reset_token,email,status,created_at,updated_at
+  </sql>
+  
+  <select id="selectUserById" resultMap="baseResultMap" parameterType="int">
+    select <include refid="baseColumn" /> from user where id = #{value}
+  </select>
+</mapper>
