@@ -1,6 +1,7 @@
 package com.hx.spring_boot.component.druid;
 
 import com.alibaba.druid.pool.DruidDataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -9,8 +10,11 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
+
 import java.sql.SQLException;
 
 /**
@@ -22,11 +26,16 @@ import java.sql.SQLException;
 @ConditionalOnClass(DruidDataSource.class)
 @ConditionalOnProperty(prefix = "druid", name = "url")
 @AutoConfigureBefore(DataSourceAutoConfiguration.class)
+@EnableTransactionManagement
 public class DruidAutoConfiguration {
 
     @Autowired
     private DruidProperties properties;
 
+    /**
+     * 配置数据源
+     * @return
+     */
     @Bean
     public DataSource dataSource() {
         DruidDataSource dataSource = new DruidDataSource();
@@ -49,5 +58,17 @@ public class DruidAutoConfiguration {
             throw new RuntimeException(e);
         }
         return dataSource;
+    }
+    
+    /**
+     * 配置数据库事务
+     * @param dataSource
+     * @return
+     */
+    @Bean
+    public DataSourceTransactionManager transactionManager(DataSource dataSource){
+    	 DataSourceTransactionManager manager = new DataSourceTransactionManager();  
+         manager.setDataSource(dataSource);  
+         return manager;  
     }
 }
